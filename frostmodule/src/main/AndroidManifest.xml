@@ -6,7 +6,7 @@
         android:allowBackup="true"
         android:label="@string/app_name" >
         <service
-            android:name=".TorrentService"
+            android:name="nizlumina.com.frostmodule.TorrentService"
             android:enabled="true"
             android:exported="false" >
         </service>

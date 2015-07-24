@@ -1,4 +1,4 @@
-package opensource.com.libtorrentservice;
+package nizlumina.com.frostmodule;
 
 import android.app.Application;
 import android.test.ApplicationTestCase;
