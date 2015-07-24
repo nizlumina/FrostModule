@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
-    package="nizlumina.com.frostmodule.frostmodule" >
+    package="com.nizlumina.frostmodule" >
     <application>
         <service
-            android:name="nizlumina.com.frostmodule.TorrentService"
+            android:name="com.nizlumina.frostmodule.TorrentService"
             android:enabled="true"
             android:exported="false" >
         </service>

@@ -1,4 +1,4 @@
-package nizlumina.com.frostmodule;
+package com.nizlumina.frostmodule;
 
 import android.app.Service;
 import android.content.Intent;
