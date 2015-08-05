@@ -22,10 +22,10 @@ ext {
 android {
     sourceSets{
         main {
-            jniLibs.srcDir "../frostwire-jlibtorrent/binaries/android"
+            //jniLibs.srcDir "../frostwire-jlibtorrent/binaries/android"
             java {
                 srcDir "../frostwire-common/core"
-                srcDir "../frostwire-jlibtorrent/src/main/java"
+//                srcDir "../frostwire-jlibtorrent/src/main/java"
             }
         }
     }
@@ -49,10 +49,11 @@ android {
 }
 
 dependencies {
-    compile fileTree(include: ['*.jar'], dir: 'libs')
-    //    compile 'com.android.support:appcompat-v7:22.2.1'
+    compile 'com.android.support:appcompat-v7:22.2.1'
     compile 'commons-io:commons-io:2.4'
-    compile project(':frostwire-jlibtorrent')
+    compile 'com.frostwire:jlibtorrent:1.1.0.1'
+    compile 'com.frostwire:jlibtorrent-android:1.1.0.1'
+    compile fileTree(include: ['*.jar'], dir: 'libs')
 }
 
 ////Lovely guy
