@@ -21,6 +21,7 @@ import java.util.Random;
 
 /**
  * A model class that implements basic properties to be used by internal {@link TorrentEngine}.
+ * This is intended to be the only object that is UI-thread safe.
  */
 public class TorrentObject implements Parcelable
 {
