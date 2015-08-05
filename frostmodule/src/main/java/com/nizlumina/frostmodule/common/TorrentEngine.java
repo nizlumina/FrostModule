@@ -61,10 +61,16 @@ public interface TorrentEngine
 
     /**
      * Set the listener for the torrent. This is intended for UI adapters where each torrent in a list will be given a corresponding listener.
-     * @param id The torrent id to be passes to the engine for retrieval of its corresponding torrent.
+     * @param id The torrent id to be passed to the engine for retrieval of its corresponding torrent.
      * @param listener The listener to be set on the given torrent.
      */
     void setTorrentListener(String id, TorrentObject.TorrentListener listener);
+
+    /**
+     * Remove the listener associated with torrent of the given id.
+     * @param id The torrent id to be passed to the engine. This doesn't do anything if the id can't be found internally.
+     */
+    void removeTorrentListener(String id);
 
     void setOnNoMoreRunningTaskListener(Runnable listener);
 
