@@ -1,1 +1,1 @@
-include ':frostmodule', ':frostwire-jlibtorrent'
+include ':frostmodule'
