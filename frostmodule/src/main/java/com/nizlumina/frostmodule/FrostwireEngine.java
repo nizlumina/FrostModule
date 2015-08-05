@@ -3,6 +3,8 @@ package com.nizlumina.frostmodule;
 import com.frostwire.bittorrent.BTContext;
 import com.frostwire.bittorrent.BTEngine;
 import com.frostwire.jlibtorrent.DHT;
+import com.frostwire.jlibtorrent.Fingerprint;
+import com.frostwire.jlibtorrent.Pair;
 import com.frostwire.jlibtorrent.Session;
 import com.frostwire.jlibtorrent.TorrentHandle;
 import com.nizlumina.frostmodule.common.EngineConfig;
@@ -16,7 +18,7 @@ import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
 /**
- * In a sense this is a functionality copy of {@link BTEngine} but aimed towards decoupling those to conform a generic {@link TorrentEngine} interface instead.
+ * In a sense this is a functionality copy of FrostWire BTEngine but aimed towards decoupling those to conform a generic {@link TorrentEngine} interface instead.
  * <p/>
  * Moving forward, we will slowly remove dependency on Frostwire BTEngine (and its common packages) and become into its own implementation ala Glide (which started as Picasso fork).
  * Also, this is my humble attempt at making sense of how Frostwire implemented theirs. All help and fixes are very much appreciated.
@@ -58,7 +60,7 @@ public class FrostwireEngine implements TorrentEngine
                     if (torrentObject != null)
                     {
                         final TorrentHandle torrentHandle = BTEngine.getInstance().getSession().addTorrent(torrentObject.getMetafile(), mEngineConfig.getDownloadDirectory());
-                        mTorrentMap.put(torrentHandle.getInfoHash().toString(), torrentHandle);
+                        mTorrentMap.put(torrentHandle.getInfoHash().toString(), torrentHandle); //id = infohash
                     }
                 }
             }
@@ -68,19 +70,37 @@ public class FrostwireEngine implements TorrentEngine
     @Override
     public void resumeTorrent(final String... ids)
     {
-        for (String id : ids)
-        {
-            if (id != null)
+        mSessionUpdateExecutor.submit(new Runnable() {
+            @Override
+            public void run()
             {
+                for (String id : ids)
+                {
+                    if (id != null)
+                    {
 
+                    }
+                }
             }
-        }
+        });
     }
 
     @Override
     public void pauseTorrent(final String... ids)
     {
+        mSessionUpdateExecutor.submit(new Runnable() {
+            @Override
+            public void run()
+            {
+                for (String id : ids)
+                {
+                    if (id != null)
+                    {
 
+                    }
+                }
+            }
+        });
     }
 
     @Override
@@ -122,6 +142,12 @@ public class FrostwireEngine implements TorrentEngine
 
     @Override
     public void setTorrentListener(String id, TorrentObject.TorrentListener listener)
+    {
+
+    }
+
+    @Override
+    public void removeTorrentListener(String id)
     {
 
     }
@@ -190,6 +216,12 @@ public class FrostwireEngine implements TorrentEngine
                 false);
 
         BTEngine.ctx.optimizeMemory = true;
+
+        //Our own implementation
+        mLibtorrentSession = new Session(
+                new Fingerprint(),
+                new Pair<>(engineConfig.getPort(), engineConfig.getPort()),
+                "0.0.0.0");
     }
 
     @Override
@@ -198,9 +230,11 @@ public class FrostwireEngine implements TorrentEngine
         mEngineListener = engineListener;
     }
 
-    private static class Util
+    private static class SessionManager
     {
 
     }
+
+    private Session mLibtorrentSession;
 
 }
