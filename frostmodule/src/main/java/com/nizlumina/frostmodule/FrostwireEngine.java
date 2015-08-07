@@ -16,6 +16,7 @@ import java.util.List;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
+import java.util.concurrent.locks.ReentrantLock;
 
 /**
  * In a sense this is a functionality copy of FrostWire BTEngine but aimed towards decoupling those to conform a generic {@link TorrentEngine} interface instead.
@@ -70,7 +71,8 @@ public class FrostwireEngine implements TorrentEngine
     @Override
     public void resumeTorrent(final String... ids)
     {
-        mSessionUpdateExecutor.submit(new Runnable() {
+        mSessionUpdateExecutor.submit(new Runnable()
+        {
             @Override
             public void run()
             {
@@ -88,7 +90,8 @@ public class FrostwireEngine implements TorrentEngine
     @Override
     public void pauseTorrent(final String... ids)
     {
-        mSessionUpdateExecutor.submit(new Runnable() {
+        mSessionUpdateExecutor.submit(new Runnable()
+        {
             @Override
             public void run()
             {
@@ -112,7 +115,8 @@ public class FrostwireEngine implements TorrentEngine
     /**
      * This use libtorrent own fast resume method for torrents that was paused.
      */
-    private void libtorrentFastResume(){
+    private void libtorrentFastResume()
+    {
 
     }
 
@@ -218,10 +222,7 @@ public class FrostwireEngine implements TorrentEngine
         BTEngine.ctx.optimizeMemory = true;
 
         //Our own implementation
-        mLibtorrentSession = new Session(
-                new Fingerprint(),
-                new Pair<>(engineConfig.getPort(), engineConfig.getPort()),
-                "0.0.0.0");
+
     }
 
     @Override
@@ -230,11 +231,52 @@ public class FrostwireEngine implements TorrentEngine
         mEngineListener = engineListener;
     }
 
+    // Even though Session itself is the "engine" (especially if you read libtorrent docs), encapsulating Session from the
+    // TorrentEngine implementation help us to be insulated from any breaking changes in the official jlibtorrent lib.
     private static class SessionManager
     {
+        public Session getLibtorrentSession()
+        {
+            return mLibtorrentSession;
+        }
+
+        private Session mLibtorrentSession;
+        private final ReentrantLock sessionStartLocker = new ReentrantLock();
+        private File mSavedState;
+
+        private void start(EngineConfig engineConfig)
+        {
+            //Albeit almost a direct copy for Frostwire BTEngine, we assume future Session class may have throwable errors via JNI/inside jlibtorrent hence the same try-finally block
+            sessionStartLocker.lock();
+            try
+            {
+                mLibtorrentSession = new Session(
+                        new Fingerprint(),
+                        new Pair<>(engineConfig.getPort(), engineConfig.getPort()),
+                        "0.0.0.0");
+            }
+            finally
+            {
+                sessionStartLocker.unlock();
+            }
+        }
+
+        private void resumeSession()
+        {
+
+        }
+
+        private void loadSavedState()
+        {
+            getLibtorrentSession().loadState();
+        }
+
+        private void loadSettings(Session session)
+        {
+
+        }
 
     }
 
-    private Session mLibtorrentSession;
 
 }
